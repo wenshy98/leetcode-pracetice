@@ -29,21 +29,22 @@ var lengthOfLongestSubstring = function (s) {
     // }
     // return max;
 
-
-    // 滑动窗口
+    // 滑动窗口 72 ms	45.5 MB	JavaScript
     const len = s.length;
     if (len <= 1) return len;
-    let max = 1;
-    let left = -1, right = 0, set = new Set();
-    for (; right < len; right++) {
-        if (set.has(s[right])) {
-            max = Math.max(max, right - left);
-            set.delete(s[right]);
-            left++;
-        } else {
-            max = Math.max(max, right - left);
-            set.add(s[right], right);
+    let max = 1, left = 0, set = new Set();
+    for (let right = 0; right < len; right++) {
+        if (max > len - left) return max;
+
+        // 有重复的删除所有set里的元素直到不重复
+        while (set.has(s[right])) {
+            set.delete(s[left++]);
+            // left++; 先运算后加减(等价与)
+            // set.delete(s[left]);  left++;
         }
+        // 添加右指针的元素到set里
+        set.add(s[right], right);
+        max = Math.max(max, set.size);
     }
     return max;
 };
